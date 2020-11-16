@@ -55,7 +55,8 @@
 // The function `getCurrentUser` should return the user information
 // together with a collection of roles to check for role assignment:
 
-import { AuthenticationError, ForbiddenError, parseJWT } from '@redwoodjs/api'
+import { AuthenticationError, ForbiddenError } from '@redwoodjs/api'
+import { db } from 'src/lib/db'
 
 /**
  * Use requireAuth in your services to check that a user is logged in,
@@ -97,8 +98,9 @@ import { AuthenticationError, ForbiddenError, parseJWT } from '@redwoodjs/api'
  *   }
  * }
  */
-export const getCurrentUser = async (decoded, { _token, _type }) => {
-  return { ...decoded, roles: parseJWT({ decoded }).roles }
+
+export const getCurrentUser = async ({ email }) => {
+  return await db.user.findOne({ where: { email } })
 }
 
 /**
